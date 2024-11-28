@@ -34,7 +34,7 @@ function outlogin($skin_dir='basic')
 
 	ob_start();
 	if ($is_member)
-		include_once ($outlogin_skin_path.'/outlogin.skin.2.php');
+		include_once ($outlogin_skin_path.'/outlogin.skin.yhsb.php');
 	else // 로그인 전이라면
 		include_once ($outlogin_skin_path.'/outlogin.skin.1.php');
 	$content = ob_get_contents();

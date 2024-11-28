@@ -1,0 +1,218 @@
+/* FONTS */
+@font-face { font-family: 'DeadStockDemo'; src: url('/static/fonts/DeadStockDemo.woff') format('woff'); }
+
+/* COMMON */
+section#body { transition: all 0s; margin-left: 168px; }
+section#body * { box-sizing:border-box; }
+#body > div.fix-layout { position: relative; padding: 0; max-width:1178px; transition: all 0s; color: #333333; }
+
+/* /battle/list.php */
+
+/* LAYOUT */
+#battle-room-wrap { display: flex; position: relative; width: 100%; flex-direction:column; }
+div.title-bar { flex: 0 0 60px; line-height: 60px; font-weight: 800; font-size: 16px; text-align: center; color: #FFF; background-color: #000; border: 1.5px solid #AAAAAA; }
+div.title-bar#battle-room-title { font-size: 20px; }
+
+/* 상단(목록, 방 생성) */
+#battle-room-wrap > #battle-room-top-wrap { display: flex; flex: 0 0 460px; overflow: hidden; }
+#battle-room-top-wrap div.contents { flex: 1 1 400px; }
+/* #battle-room-top-wrap > div { border: 1px solid #C6C6C6; } */
+
+/* 전투 가능 캐릭터 목록 */
+#battle-room-top-wrap > #character-list-wrap { display: flex; flex:1 1 auto; flex-direction: column; }
+#character-list-wrap > .contents { flex: 1 1 auto; overflow: auto; background-color: #E3E3E3; }
+#character-list-wrap li.list-character { display: flex; float:left; padding-left: 16px; width: 50%; height: 44px; line-height: 44px; cursor: pointer; background-color: #E3E3E3; border: 1px solid #AAAAAA; }
+#character-list-wrap li.list-character > span { font-size: 16px; font-weight: 600; color: #1C1C1C; flex: 1 1 auto; }
+#character-list-wrap li.list-character > img { flex: 0 0 32px; max-width: 32px; max-height: 44px; }
+
+/* 전투방 생성 */
+#battle-room-top-wrap > #make-room-wrap { display: flex; position: relative; flex:0 0 800px; flex-direction: row; background: #888; }
+#make-room-wrap > .make-room-half { display: flex; flex: 1 0 400px; flex-direction: column; }
+#make-room-wrap #make-room-left.make-room-half { background: linear-gradient(360deg, #C6C6C6 0%, #1C1C1C 100%); }
+#make-room-wrap #make-room-right.make-room-half { background: linear-gradient(180deg, #C6C6C6 0%, #1C1C1C 100%); }
+#make-room-wrap .ch-name-bar { display: flex; padding: 12px 16px; flex: 0 0 60px; justify-content: center; background-color: #E3E3E3; }
+#make-room-wrap .ch-name-bar.my-name { border-right: 1px solid #1C1C1C; }
+#make-room-wrap .ch-name-bar.deactive > * { display: none !important; }
+#make-room-wrap .ch-name-bar > span { margin: 0 5px; font-weight: 600; font-size: 24px; line-height: 36px; color:#1C1C1C; }
+#make-room-wrap .ch-name-bar > .ch-rank-num-title { display: inline-block; width: 80px; background-color: #393939; color: #FFFFFF; font-weight: 400; font-size: 16px; text-align: center; }
+#make-room-wrap .ch-name-bar > .ch-rank-num { font-weight: 600; font-size: 18px; color: #393939; }
+
+#make-room-wrap .ch-portrait-box { position: relative; }
+#make-room-wrap .ch-portrait-box > img { position: relative; max-width: 100%; max-height: 100%; left: 50%; top: 50%; transform: translate(-50%,-50%); }
+#make-room-wrap #make-room-vs { position: absolute; width: 114px; height: 32px; left: 50%; top: 50%; transform: translate(-50%,-50%); background-image: url('/static/img/img_vs.png'); background-position: center center; background-size: contain; background-repeat: no-repeat; }
+#make-room-wrap #make-room-button { position: absolute;  width: 212px; height: 57px; padding: 0 32px;  left: 50%; bottom: 30px; transform: translate(-50%,0); color: #FFFFFF; background: linear-gradient(180deg, #AF1B1B 0%, #751E1E 100%); border: 3px solid #FFFFFF; box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.5); font-weight: 800; font-size: 26px; }
+
+/* 하단(현재 전투장 목록, 종료된 전투장 목록) */
+#battle-room-wrap > #battle-room-bottom-wrap { display  : flex; flex: 0 0 360px; overflow: hidden; }
+#battle-room-bottom-wrap div.contents { flex: 1 1 300px; }
+
+/* 현재 전투장 목록 */
+#battle-room-bottom-wrap > #battle-room-list-wrap { display: flex; flex: 1 1 auto; flex-direction: column; }
+#battle-room-list-wrap { background-color: #ACACAC; width: 0; /* 가로스크롤 HACK */ }
+#battle-room-list-wrap #room-list-box.contents { display: flex; overflow-x: auto; overflow-y: hidden; white-space: nowrap; align-items: center; background: #393939; padding: 24px 36px; }
+
+/* 현재 전투장 목록: room-item */
+#room-list-box .room-item { display: inline-flex; width: 0; margin-right: 16px; padding: 16px; width: 152px; flex-direction: column; flex: 0 0 184px; background: #E3E3E3;}
+#room-list-box .room-item .room-thumb-wrap { display: flex; position: relative; flex-direction: row; justify-content: space-between; flex: 1 1 auto; }
+#room-list-box .room-item .room-thumb-wrap .room-thumb-box { display: flex; background-color: #FFF; flex: 0 0 72px; flex-direction: column; overflow: hidden }
+#room-list-box .room-item .room-thumb-wrap .room-thumb-box .img-box { display: flex; position: relative; flex: 0 0 97px; border: 1px solid #AAAAAA; flex-direction: column-reverse; align-items: center; }
+#room-list-box .room-item .room-thumb-wrap .room-thumb-box .img-box > img { max-width: 100%; max-height: 100%; }
+#room-list-box .room-item .room-thumb-wrap .room-thumb-box .name-box { display: flex; position: relative; flex: 0 0 40px; border: 1px solid #AAAAAA; justify-content: center; align-items: center;  }
+#room-list-box .room-item .room-vs-img { position: absolute; width: 72px; height: 20px; left: 50%; top:75px; transform: translate(-50%, 0);  background-image: url('/static/img/img_vs_red.png'); background-position: center center; background-size: contain; background-repeat: no-repeat; }
+#room-list-box .room-item .room-item-btn { margin-top: 8px;flex: 0 0 48px; background: #393939; text-align: center; line-height: 48px; cursor: pointer; }
+#room-list-box .room-item .room-item-btn > span { font-size: 18px; font-weight: 600; color: #FFF;  }
+#room-list-box .room-item.is-own { background-color: #FFF; box-shadow: 0px 8px 16px 0px #00000080; }
+#room-list-box .room-item.is-own .room-item-btn { background: linear-gradient(180deg, #AF1B1B 0%, #751E1E 100%); }
+
+/* 종료된 전투장 목록 */
+#battle-room-bottom-wrap > #battle-room-ko-list-wrap { display: flex; flex: 0 0 300px; flex-direction: column; }
+#battle-room-ko-list-wrap { background-color: #DDD; }
+#battle-room-ko-list-wrap > .contents { overflow-y: auto; height: 0; /* 세로스크롤 HACK */ }
+#battle-room-ko-list-wrap .room-item { display: flex; position: relative; width: 100%; height: 54px; border: 1px solid #AAAAAA; background: #E3E3E3; align-items: center; cursor: pointer; }
+#battle-room-ko-list-wrap .room-item > div { display: flex; flex: 1 1 auto; font-size: 16px; font-weight: 600; color: #1C1C1C; }
+#battle-room-ko-list-wrap .room-item > div.ch1 { padding-right: 32px; justify-content: flex-end; }
+#battle-room-ko-list-wrap .room-item > div.ch2 { padding-left: 32px; }
+#battle-room-ko-list-wrap .room-item span { line-height: 25px; font-size: 16px;  }
+#battle-room-ko-list-wrap .room-item .room-result { display: block; width: 41px; height: 25px; margin-left: 6px; font-size: 14px; font-weight: 600; color:#FFF; text-align: center; }
+#battle-room-ko-list-wrap .room-item .room-result.win { background: #751E1E; }
+#battle-room-ko-list-wrap .room-item .room-result.loss { background: #717171; }
+#battle-room-ko-list-wrap .room-item .vs-img { position: absolute; width: 50px; height: 14px; left: 50%; top: 50%; transform: translate(-50%,-50%);  background-image: url('/static/img/img_vs.png'); background-position: center center; background-size: contain; background-repeat: no-repeat;}
+
+
+/* 전투장 기록: 배경 */
+.fix-layout > #battle-log-bg { display: flex; position: absolute; width: 100%; height: 100%; background-color: #0B0B0B; border: 2px solid #ACACAC; z-index: 1; overflow: hidden; }
+.fix-layout > #battle-log-box { display: flex; position: relative; width: 100%; height: 100%; padding: 36px 0 ; z-index: 2; flex-direction: column; }
+
+#battle-log-bg .bg-box { position: relative; flex: 1 1 auto; background-repeat: no-repeat; }
+#battle-log-bg #bg-left.bg-box { background-position: left 40px bottom;}
+#battle-log-bg #bg-right.bg-box { background-position: right 40px bottom;}
+#battle-log-bg .bg-box .bg-name { position: absolute; top: 250px; font-family: 'DeadStockDemo'; font-size: 48px; color: #7C1717; }
+#battle-log-bg .bg-box #ch1_name.bg-name {
+  left: 0;
+  -moz-transform: matrix( 1.38671857829968,0.40570888963937,0,1.71867859601704,0,0);
+  -webkit-transform: matrix( 1.38671857829968,0.40570888963937,0,1.71867859601704,0,0);
+  -ms-transform: matrix( 1.38671857829968,0.40570888963937,0,1.71867859601704,0,0);
+}
+#battle-log-bg .bg-box #ch2_name.bg-name {
+  right: 0;
+  -moz-transform: matrix( 1.6851417883241,-0.34218074548541,0,2.06210555538607,0,0);
+  -webkit-transform: matrix( 1.6851417883241,-0.34218074548541,0,2.06210555538607,0,0);
+  -ms-transform: matrix( 1.6851417883241,-0.34218074548541,0,2.06210555538607,0,0);
+ }
+
+/* 전투장 기록: 컴포넌트 */
+#battle-log-box > div { display: flex; }
+
+/* 전투장 기록: 바이탈 영역 */
+#battle-log-box > #vital-wrap { display: flex; padding: 0 80px; flex: 0 0 auto; }
+#vital-wrap .vital-vertical { display: flex; flex: 1 1 auto; flex-direction: column;}
+#vital-wrap .vital-vertical .vital-name-wrap { display: flex; padding: 0 24px; margin-bottom: 8px;flex-direction: row; flex: 1 1 auto;  }
+#vital-wrap .vital-vertical .vital-hp-bar-wrap { flex: 1 1 auto;}
+#vital-wrap .vital-vertical .energy-bar-wrap { display: flex; margin-top: 15px; padding: 0 70px; flex: 0 0 33px; }
+.vital-name-wrap .vital-name { color:#D23030; font-size: 26px; line-height: 26px; font-weight: 900; text-shadow:-1px -1px 0 #000, 1px -1px 0 #000,-1px  1px 0 #000, 1px  1px 0 #000; }
+.vital-hp-bar-wrap .hp-bar-bg { display: flex; margin: 0 10px; padding:10px 10px 9px 12px; background-image: url('/static/img/bg_hp_bar.png'); background-size: 100% 100%; }
+.vital-hp-bar-wrap .hp-bar-bg > div { height: 32px; }
+.vital-hp-bar-wrap .hp-bar-bg .hp-bar-void { background-image: url('/static/img/bg_hp_bar_void.png'); background-repeat: repeat-x; }
+.vital-hp-bar-wrap .hp-bar-bg .hp-bar-fill { background-color: transparent; }
+.energy-bar-wrap .energy-bar-bg { display: flex; flex: 0 0 192px; padding: 5px 5px 5px 7px; background-image: url('/static/img/bg_energy_bar.png'); background-size: 100% 100%; background-repeat: no-repeat; }
+.energy-bar-wrap .energy-bar-bg .energy-bar-box { display: flex; flex: 1 1 auto; }
+.energy-bar-wrap .energy-bar-bg .energy-bar-box .energy-item { flex: 1 1 auto; border: 1px solid #1C1C1C; }
+.energy-bar-wrap .energy-bar-bg .energy-bar-box .energy-item.active:nth-of-type(1) { background-color: #fff08d;}
+.energy-bar-wrap .energy-bar-bg .energy-bar-box .energy-item.active:nth-of-type(2) { background-color: #ff8465;}
+.energy-bar-wrap .energy-bar-bg .energy-bar-box .energy-item.active:nth-of-type(3) { background-color: #ff3e45;}
+
+#vital-left div { flex-direction: row-reverse; } /* 반전 */
+#vital-left .vital-name-wrap .vital-name-box {text-align: right; } /* 반전 */
+#vital-wrap #vital-right.vital-vertical .vital-name-wrap { flex-direction: row-reverse; } /* 반전 */
+
+
+/* 전투장 기록: 텍스트 전투 로그 영역 */
+#battle-log-box > #text-log-wrap { display: flex; position: relative; height: 0; margin: 32px 0; padding: 0 235px; flex: 5 5 300px; flex-direction: row; }
+#text-log-wrap .text-log-border { display: flex; background: linear-gradient(180deg, #393939 0%, #1C1C1C 100%); flex: 1 1 auto; flex-direction: column; overflow-y: auto; border: 5px solid #ACACAC;}
+#text-log-wrap .text-log-box { display: flex; margin: 12px; flex: 0 0 80px; color: #FFF; }
+#text-log-wrap .text-log-box .log-box-padding { flex: 0 0 20px; }
+#text-log-wrap .text-log-box .log-box-thumbnail-border { border: 1.5px solid #000; flex: 0 0 80px; }
+#text-log-wrap .text-log-box .log-box-thumbnail-border .log-box-thumbnail { width: 100%; height: 100%; background-size: contain; background-color: #000; border: 1.5px solid #D23030; background-position: bottom; background-repeat: no-repeat; }
+#text-log-wrap .text-log-box .log-box-text-box { padding: 0 18px; flex: 1 1 auto; }
+.text-log-box.reverse { flex-direction: row-reverse; }
+.text-log-box.reverse .log-box-text-box { text-align: right; }
+.text-log-box.knockout { align-items: center; justify-content: center; }
+
+/* 전투장 기록: 회상카드 */
+#flashback-wrap { position: absolute; bottom: 130px; left: 180px; transform: rotate(9deg); z-index: 10; }
+#flashback-wrap .flashback-box { position: absolute; width: 105px; height: 132px; left: 0px; top: 0px; background-color: #000; z-index: 2; }
+#flashback-wrap .flashback { position: absolute; width: 101px; height: 128px; left: 2px; top: 2px; border: 3px solid #000; background: center center/cover no-repeat #8A140E; z-index: 3; }
+
+/* 전투장 기록: 조작 영역 */
+#battle-log-box > #command-turn-wrap { display: flex; padding: 0 235px; justify-content: space-between; flex: 0 0 auto; }
+#command-turn-wrap .command-box { display: flex; flex-direction: row; border: 3px solid #0B0B0B; flex: 0 0 448px; transform: skewX(10deg); font-style: italic; }
+#command-turn-wrap .command-box .command-item { height: 43px; color: #FFF; font-size: 23px; font-weight: 700; background-color: #0B0B0B; cursor: pointer; flex: 1 0 112px;line-height: 40px; text-align: center; border: 2px solid #751E1E; }
+#command-turn-wrap .command-box .command-item:first-of-type { border-left: 4px solid #751E1E; }
+#command-turn-wrap .command-box .command-item:last-of-type { border-right: 4px solid #751E1E; }
+#command-turn-wrap .turn-box { display: flex; flex: 0 0 260px; justify-content: flex-end; align-items: center; }
+#command-turn-wrap .turn-box > span { color: #FFF; font-size: 20px; font-weight: 700; text-shadow: 1px 1px 5px #000, -1px -1px 5px #000; }
+
+/* 전투장 기록: 캐릭터 대사 출력 영역 */
+#battle-log-box #conversation-wrap { display: flex; margin-top: 30px; padding: 0 208px; flex: 1 1 160px; }
+#conversation-wrap > div { position: relative; padding: 0 28px; flex: 1 1; }
+#conversation-wrap .conversation-box { width: 100%; height: 100%; padding: 14px 20px; background: linear-gradient(180deg, #8F2A2A 0%, #922D2D 100%); border: 3px solid #FFF; color: #FFF; font-size: 21px; }
+#conversation-wrap .conversation-tail{
+  position: absolute;
+  width: 0px;
+  height: 0px;
+  border-style: solid;
+  border-width: 0 12px 38px 12px;
+  border-color: transparent transparent #FFF transparent;
+}
+#conversation-wrap .conversation-tail:nth-of-type(odd){
+  border-width: 0 10px 34px 10px;
+  border-color: transparent transparent #922D2D transparent;
+}
+
+#conversation-left-wrap .conversation-tail { left: 0; top: 108px; rotate: 270deg; }
+#conversation-left-wrap .conversation-tail:last-of-type { left: 7px; top: 110px; }
+#conversation-right-wrap .conversation-tail { right: 0; top: 108px; rotate: 90deg; }
+#conversation-right-wrap .conversation-tail:last-of-type { right: 7px; top: 110px; }
+
+#battle-log-box #inven-wrap { display: none; position: absolute; width: 50%; height: 30%; padding: 20px; left: 25%; top: 50%; background-color: #fff; flex-direction: column;  }
+#battle-log-box #inven-wrap.active { display: flex; }
+#inven-wrap .inven-title { display: flex; margin-bottom: 20px; justify-content: center; align-items: center; flex: 0 0 40px; }
+#inven-wrap .inven-title > .text { flex: 1 1 auto; }
+#inven-wrap .inven-title > #inven-close { text-align: center; flex: 0 0 40px; }
+#inven-wrap .inven-box { display: flex; padding: 10px; flex: 1 1 auto; flex-direction: column; overflow: auto; }
+#inven-wrap .inven-item { display: flex; flex: 0 0 80px; flex-direction: row; overflow: hidden; align-items: center; }
+#inven-wrap .inven-item > img { max-height: 100%; flex: 0 0 auto; }
+#inven-wrap .inven-item > span { cursor: pointer; padding-left: 24px; flex: 1 1 auto; }
+
+
+/****************************************************
+	반응형 스타일
+****************************************************/
+
+@media all and (max-width:1024px)  {
+
+  section#body { margin-left: 0; background-color: #000; }
+  .fix-layout > #battle-log-bg { border: none; }
+  #body > div.fix-layout { height: 90vh !important; }
+
+  #battle-log-bg .bg-box { background-image: none !important; }
+  #battle-log-bg .bg-box .bg-name { display: none; }
+
+  .vital-hp-bar-wrap .hp-bar-bg { margin: 0; }
+  #vital-wrap .vital-vertical .energy-bar-wrap { padding: 0 4px; }
+  #vital-left .energy-bar-wrap { flex-direction: row; }
+  #vital-right .energy-bar-wrap { flex-direction: row-reverse; }
+
+  #battle-log-box > #text-log-wrap { margin: 48px 0; padding: 0 36px; }
+  #battle-log-box > #vital-wrap { padding: 0 40px }
+  #battle-log-box > #command-turn-wrap {  padding: 0 36px; }
+
+  #command-turn-wrap .command-box { flex: 1 1 448px; z-index: 15;}
+
+  #battle-log-box #conversation-wrap { padding: 0 30px; }
+  #conversation-wrap > div { padding: 0 12px; }
+  #conversation-wrap .conversation-tail { display: none; }
+
+  #flashback-wrap { left: 70%; bottom: 50px; }
+
+}
