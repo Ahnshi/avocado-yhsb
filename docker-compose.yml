@@ -1,0 +1,37 @@
+version: "3"
+
+services:
+  webserver:
+    build: 
+      dockerfile: Dockerfile
+    container_name: "php73"
+    restart: "always"
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - database
+    volumes:
+      - ./www:/var/www/html:rw
+      - ./config/php/php.ini:/usr/local/etc/php/php.ini
+      - ./config/vhosts:/etc/apache2/sites-enabled
+      - ./logs/apache2:/var/log/apache2
+    environment:
+      MYSQL_ROOT_PASSWORD: Dydtkd!12
+      MYSQL_USER: yhsb
+      MYSQL_PASSWORD: Dydtkd!12
+      MYSQL_DATABASE: yhsb
+  database:
+    image: mariadb:10.6
+    container_name: "mariadb"
+    restart: "always"
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mysql:/var/lib/mysql
+      - ./logs/mysql:/var/log/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: docker
+      MYSQL_USER: yhsb
+      MYSQL_PASSWORD: Dydtkd!12
+      MYSQL_DATABASE: yhsb
