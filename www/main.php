@@ -59,22 +59,51 @@ if($main_content) {
 			<? include(G5_PATH."/templete/txt.visual.php"); ?>
 			</div>
 			<div class="twitter-wrap">
-			<? /* include(G5_PATH."/templete/txt.twitter.php"); */ ?>
+			<? include(G5_PATH."/templete/txt.twitter.php"); ?>
 			</div>
 		</div>
 		<div id="main-notice-wrap">
-			<marquee id="middel_notice" behavior="alternate/slide" direction="up/right/..." loop="" scrollmount="" scrolldelay="" style="text-shadow: 0px 0px 5px rgb(0 0 0);">< 글씨 슬라이드가 나오게 됩니다 ></marquee>
+			<marquee id="middel_notice" behavior="alternate/slide" direction="up/right/..." loop="" scrollmount="" scrolldelay="" style="text-shadow: 0px 0px 5px rgb(0 0 0);">< 현재 가개장 기간입니다. ></marquee>
 		</div>
 		<div id="main-bottom-wrap">
 			<div class="bottom-left-wrap">
 				<div id="button-battle"></div>
-				<div class="banner-box"></div>
+				<div class="banner-box"><img style=" position: relative; top: 66px; left: 198px;" src="/static/img/yhsb_icon.png"/></div>
+				<div class="main-mobile calendar-wrap">
+					<table class="calendar-table">
+						<thead>
+							<tr style="height:25px"><th>급식표</th></tr>
+						</thead>
+						<tbody class="">
+							<tr>
+								<td>
+									<div class="no-data">신청기간 이후<br>공개됩니다.</div>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 			</div>
-			<div class="calendar-wrap"></div>
-			<div class="login-wrap">
+			<div class="calendar-wrap">
+				<table class="calendar-table">
+					<thead>
+						<tr style="height:25px"><th>급식표</th></tr>
+					</thead>
+					<tbody class="">
+						<tr>
+							<td>
+								<div class="no-data">신청기간 이후 공개됩니다.</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="login-wrap">   
 			<? include(G5_PATH."/templete/txt.outlogin.php"); ?>
 			</div>
 		</div>
+	</div>
+	<div class="main-mobile mobile-banner-box">
 	</div>
 </div>
 
@@ -86,9 +115,10 @@ $(function() {
 	window.onload = function() {
 		$('#body').css('opacity', 1);
 
-		$('#button-battle').on('click',()=>{
-			location.href = '/battle/list.php';
-		})
+		//신청기간에는 전투란 막아둠
+		//$('#button-battle').on('click',()=>{
+		//	location.href = '/battle/list.php';
+		//})
 	};
 });
 </script>

@@ -1,0 +1,54 @@
+@charset "utf-8";
+
+/* 전체 */
+section#body { transition: all 0s; }
+.fix-layout { transition: all 0s; }
+
+/* 전체 영역 */
+#main-wrap * { box-sizing:border-box; transition: all 0s; }
+#main-wrap { display: flex; position: relative; width: 100%; margin-top: -14px; flex-direction:column; }
+#main_floating_image { position:absolute; width: 180px; right:-118px; top:328px; z-index:5; }
+
+/* 점수 영역 */
+#main-wrap > #main-score-wrap { display: flex; position: relative; padding-top: 60px; flex: 0 0 230px; background-image: url('/static/img/img_school_logo.png'); background-repeat: no-repeat; background-position: center center; background-size:contain; }
+#main-score-wrap .score-box { display: flex; padding: 0 50px; flex: 1 1 50%; flex-direction: column; }
+#main-score-wrap .score-box .score-num-box { display: flex; padding: 0 50px; flex: 0 0 24px; align-items: flex-start; background-repeat: no-repeat; }
+#main-score-wrap .score-box .score-num-box .score-num { margin-top: -10px; font-size: 28px; font-style: italic; font-weight: 900; color: #FFF; text-shadow:-1px -1px 0 #000, 1px -1px 0 #000, -1px  1px 0 #000, 1px  1px 0 #000; letter-spacing: -2px; }
+#main-score-wrap .score-box .score-bar-box { display: flex; padding: 0 8px; flex: 0 0 49px; background-image: url('/static/img/bg_score_bar.png'); background-repeat: repeat-x; border: 2px solid #000; align-items: center; justify-content:center; }
+#main-score-wrap .score-box .score-bar-box .score-fill { height: 36px; background-repeat: repeat-x; background-size:contain; }
+
+#main-score-wrap .score-box.left .score-num-box { background-position:left; background-image: url('/static/img/bg_score_gradient_left.png'); flex-direction:row }
+#main-score-wrap .score-box.right .score-num-box { background-position:right; background-image: url('/static/img/bg_score_gradient_right.png'); flex-direction:row-reverse }
+#main-score-wrap .score-box.left .score-bar-box { flex-direction: row }
+#main-score-wrap .score-box.right .score-bar-box { flex-direction: row-reverse }
+#main-score-wrap .score-box.left .score-bar-box .score-fill { background-image: url('/static/img/bg_score_bar_fill_left.png'); }
+#main-score-wrap .score-box.right .score-bar-box .score-fill { background-image: url('/static/img/bg_score_bar_fill_right.png'); }
+
+#main-score-wrap .score-box .logo-box { position: absolute; background-repeat: no-repeat; }
+#main-score-wrap .score-box.left .logo-box { width: 169px; height: 141px; left: -46px; top: 25px; background-image: url('/static/img/icon_dragon.png'); background-repeat: no-repeat; }
+#main-score-wrap .score-box.right .logo-box { width: 133px; height: 111px; right: -40px; top: 48px; background-image: url('/static/img/icon_tiger.png'); background-repeat: no-repeat; }
+
+#main-score-wrap .main-score-vs { position: absolute; width: 100px; height: 64px; left: 50%; top: 50%; transform: translate(-50%, -60%); background-image: url('/static/img/img_vs_main.png'); background-size:contain; background-position:center center; background-repeat:no-repeat; }
+
+/* 메인 메뉴 영역 */
+#main-wrap > #main-body-wrap { display: flex; position: relative; top: -50px; flex: 1 1 auto; flex-direction:column; border: 2px solid #AEAEAE; }
+#main-wrap > #main-body-wrap div { overflow: hidden; }
+
+/* 메인 상단(슬라이드/트위터) */
+#main-top-wrap { display: flex; flex: 0 0 300px; flex-direction:row; }
+#main-top-wrap > div { border: 2px solid #AEAEAE; }
+#main-top-wrap > .slide-wrap { flex: 0 0 700px; background-color: #4B4B4B; }
+#main-top-wrap > .twitter-wrap { flex: 1 1 auto; background-color: #0C0C0C; }
+
+/* 메인 중단(공지) */
+#main-notice-wrap { display: flex; flex: 0 0 32px; border: 2px solid #AEAEAE; background-color: #0C0C0C; }
+#main-notice-wrap > marquee { color: #FFF; line-height:30px; letter-spacing:15px; flex: 1 1 auto; }
+
+/* 메인 하단 */
+#main-bottom-wrap { display: flex; border: 2px solid #AEAEAE; background-color: #0C0C0C; flex: 0 0 auto; flex-direction:row }
+#main-bottom-wrap .bottom-left-wrap { display: flex; flex: 0 0 322px; flex-direction: column; }
+#main-bottom-wrap .bottom-left-wrap > div { flex: 0 0 160px;  border: 2px solid #AEAEAE; background-position:center; background-size:cover; }
+#main-bottom-wrap .bottom-left-wrap #button-battle { cursor: pointer; background-image: url('/static/img/btn_battle.png'); }
+#main-bottom-wrap .bottom-left-wrap .banner-box { background-image: url('/static/img/bg_banner_box.png'); }
+#main-bottom-wrap .calendar-wrap { background-color: #CCCCCC; border: 2px solid #AEAEAE; flex: 1 1 auto; }
+#main-bottom-wrap .login-wrap { display: flex; border: 2px solid #AEAEAE; flex: 0 0 423px; align-items: center; justify-content: center; }

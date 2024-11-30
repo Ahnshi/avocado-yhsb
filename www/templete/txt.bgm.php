@@ -8,12 +8,12 @@
 		?>
 	</div>
 	<ul>
-		<li>
+		<li style="width:10px;">
 			<a href="<?=G5_URL?>/bgm.php?action=play" target="bgm_frame" class="play" onclick="return fn_control_bgm('play')">
 				재생
 			</a>
 		</li>
-		<li>
+		<li style="width:10px;">
 			<a href="<?=G5_URL?>/bgm.php" target="bgm_frame" class="stop" onclick="return fn_control_bgm('stop')">
 				정지
 			</a>

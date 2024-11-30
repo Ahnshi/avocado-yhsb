@@ -23,16 +23,16 @@ for ($i=0; $i < $size; $i++) {
 ?>
 
 <div id="member-list-wrap">
-	<div id="member-portrait-box">
+	<div class="pc-member" id="member-portrait-box">
 		<div class="member-portrait" style="">
 			<div class="name-phrase-box">
-				<div class="name-box"><span></span><span></span></div>
+				<div class="name-box"><span></span><span></span><span></span></div>
 				<div class="phrase-box"><span></span></div>
 			</div>
 		</div>
 		<div class="logo-box"></div>
 	</div>
-	<div id="member-list-box">
+	<div class="pc-member member-list-box">
 		<?for ($i=0; $i < sizeof($list_arr); $i++) { ?>
 			<ul class="member-item-list">
 				<?for ($ii=0; $ii < sizeof($list_arr[$i]); $ii++) { ?>
@@ -43,6 +43,34 @@ for ($i=0; $i < $size; $i++) {
 				<?}?>
 			</ul>
 		<?}?>
+	</div>
+	<div class="mobile-member member-list-box">
+		<ul class="member-item-list">
+		<?for ($i=0; $i < sizeof($list_arr); $i++) { 
+			if($i%2 == 0) { 
+				for ($ii=0; $ii < sizeof($list_arr[$i]); $ii++) { 
+					if($list_arr[$i][$ii]['ch_id']) { ?>
+					<li class="member-item" data-ch_id="<?=$list_arr[$i][$ii]['ch_id']?>">
+						<div class="thumb-box" style="background-image:url(<?=$list_arr[$i][$ii]['ch_thumb']?>)"></div>
+						<div class="name-box"><span><?=$list_arr[$i][$ii]['ch_name']?></span></div>
+					</li>
+				<?}}?>
+			<?}
+		}?>
+		</ul>
+		<ul class="member-item-list">
+		<?for ($i=0; $i < sizeof($list_arr); $i++) { 
+			if($i%2 != 0) { 
+				for ($ii=0; $ii < sizeof($list_arr[$i]); $ii++) { 
+					if($list_arr[$i][$ii]['ch_id']) { ?>
+					<li class="member-item" data-ch_id="<?=$list_arr[$i][$ii]['ch_id']?>">
+						<div class="thumb-box" style="background-image:url(<?=$list_arr[$i][$ii]['ch_thumb']?>)"></div>
+						<div class="name-box"><span><?=$list_arr[$i][$ii]['ch_name']?></span></div>
+					</li>
+				<?}}?>
+			<?}
+		}?>
+		</ul>
 	</div>
 </div>
 
@@ -88,12 +116,24 @@ $().ready(()=>{
 					/* 캐릭터 전신 URL */
 					const chBody = ch['ch_body'] ?? ''
 
+					/* 오너 정보 */
+					const memberId = ch['mb_id'] ?? ''
+					let ownerValue = '';
+					if(memberId != '') {
+						ownerValue = (ch['ch_type'] == 'npc')?'NPC. ':'OWNER. ';
+						ownerValue += ch['mb_nick'];
+					}
+
 					// JQUERY: 변경내용 적용
 					const nameBox = $('.name-phrase-box').first()
 					const first = $('.name-box > span').eq(0)
 					const others = $('.name-box > span').eq(1)
+					const owner = $('.name-box > span').eq(2)
+
 					first.html(firstText)
 					others.html(othersText)
+					owner.html(ownerValue)
+					
 					nameBox.addClass('active')
 
 					const phrase = $('.phrase-box > span').first()

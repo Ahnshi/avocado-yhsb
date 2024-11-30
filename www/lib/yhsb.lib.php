@@ -52,6 +52,7 @@ function get_character_full_info($ch_id) {
 	}
 	$ch_ranking = get_character_ranking($ch_id);
 	$ch['ch_ranking'] = $ch_ranking;
+	$ch['mb_nick'] = get_member_name($ch['mb_id']); // 24.11.29 2z 멤버닉네임 정보 추가
 
 	return $ch;
 }

@@ -44,6 +44,15 @@
 			echo '<link rel="stylesheet" href="'.G5_DATA_URL.'/css/_design.config.css" type="text/css" />';
 		}
 	?>
+	<style type="text/css">
+		@media (max-width: 640px) {
+			body {
+				background-image: url(https://firebasestorage.googleapis.com/v0/b/okinawablues.appspot.com/o/timelineComment%2F%ED%99%88%ED%8E%98%EC%9D%B4%EC%A7%80%20%EB%94%94%EC%9E%90%EC%9D%B8_%EB%A9%94%EC%9D%B8_241105.png_0af422de-7099-48e9-a686-9ec5c167726f?alt=media&token=cd60028d-8de3-4dc1-bc78-c06cd1885f99);
+				background-color: #262626;
+				background-repeat: no-repeat;
+			}
+		}
+	</style>
 
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 </head>

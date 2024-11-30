@@ -1,4 +1,5 @@
 @charset "utf-8";
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200..900&family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap');
 
 /* 전체 */
 section#body { transition: all 0s; }
@@ -50,5 +51,45 @@ section#body { transition: all 0s; }
 #main-bottom-wrap .bottom-left-wrap > div { flex: 0 0 160px;  border: 2px solid #AEAEAE; background-position:center; background-size:cover; }
 #main-bottom-wrap .bottom-left-wrap #button-battle { cursor: pointer; background-image: url('/static/img/btn_battle.png'); }
 #main-bottom-wrap .bottom-left-wrap .banner-box { background-image: url('/static/img/bg_banner_box.png'); }
-#main-bottom-wrap .calendar-wrap { background-color: #CCCCCC; border: 2px solid #AEAEAE; flex: 1 1 auto; }
+#main-bottom-wrap .calendar-wrap { display:flex; background-color: #CCCCCC; border: 2px solid #AEAEAE; flex: 1 1 auto; padding: 25px 20px;}
 #main-bottom-wrap .login-wrap { display: flex; border: 2px solid #AEAEAE; flex: 0 0 423px; align-items: center; justify-content: center; }
+
+/* 급식표 */
+table.calendar-table { color: #000; font-family: "Noto Serif KR", serif; }
+table.calendar-table th { border: 1px solid black; font-size: 16px; font-weight: bold; }
+table.calendar-table td { border: 1px solid black; }
+table.calendar-table .no-data { display: block; text-align: center; width: 100%; color: rgba(0, 0, 0, 0.3); }
+
+/* 모바일 */
+@media all and (min-width:640px) { 
+    .main-mobile { display: none!important; }
+}
+
+@media all and (max-width:640px) { 
+    .main-mobile { display: block; }
+    
+    #main_floating_image { display: none; }
+    #main-wrap > #main-score-wrap { display: none; }
+    #main-top-wrap > .twitter-wrap  { display: none; }
+    #main-notice-wrap { display: none; }
+
+    #main-wrap > #main-body-wrap { margin-top: 20px; top:0px }
+    #main-wrap > #main-body-wrap > div { flex: auto; }
+    #main-top-wrap > .slide-wrap { flex: 0 0 100%; background-color: none; }
+
+    #main-bottom-wrap { flex-direction: column-reverse; }
+    #main-bottom-wrap .bottom-left-wrap { flex-direction: row; flex: 0 0 200px; }
+    #main-bottom-wrap .bottom-left-wrap #button-battle { flex: 0 0 60%; }
+    #main-bottom-wrap .bottom-left-wrap .banner-box { display: none;}
+    #main-bottom-wrap .bottom-left-wrap .calendar-wrap { flex: none; width: 100%;}
+
+    /* 급식표 */
+    #main-bottom-wrap > .calendar-wrap { display: none;  }
+    #main-bottom-wrap .bottom-left-wrap .calendar-wrap { flex: 0 0 40%; padding: 20px 15px; }
+    #main-bottom-wrap .login-wrap { flex: none; margin: 0px 0; border: 0px; }
+    #main-bottom-wrap .login-wrap #profile-box { height: 220px;}
+    #main-bottom-wrap .login-wrap #profile-box #btn-rank{ display:none; }
+    #main-bottom-wrap .login-wrap .login-skin-basic { margin: 20px 0px; }
+
+    .mobile-banner-box { text-align: center; padding: 10px;}
+}

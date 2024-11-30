@@ -1,5 +1,5 @@
 <? if($config['cf_twitter']) { ?>
-<div class="twitter theme-box" style="opacity: 0; padding: 15px 10px; height: 310px; overflow: auto;">
+<div class="twitter theme-box" style="padding: 15px 10px; height: 310px; overflow: auto;">
 	<a class="twitter-timeline" href="https://twitter.com/<?=$config['cf_twitter']?>">-</a><script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
 </div>
 <? } ?>
