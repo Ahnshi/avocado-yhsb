@@ -29,7 +29,7 @@ add_stylesheet('<link rel="stylesheet" href="'.$outlogin_skin_url.'/style.css">'
 	</div>
 
 	<!-- 급식서열 링크 -->
-	<div id="btn-rank" onclick="location.href='/battle/ranking.php'"></div>
+	<div id="btn-rank" onclick="#/*location.href='/battle/ranking.php'*/"></div>
 
 </div>
 

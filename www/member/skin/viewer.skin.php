@@ -68,7 +68,7 @@ add_stylesheet('<link rel="stylesheet" href="'.G5_CSS_URL.'/member.yhsb.css">', 
 									<th>성격<br/>및<br/>기타</th>
 									<td class="table-scroll-td" colspan="2">
 										<div class>
-											<?=$ch['others']?>
+											<?=nl2br($ch['others'])?>
 										</div>
 									</td>
 								</tr>

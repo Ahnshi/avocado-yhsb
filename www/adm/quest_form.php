@@ -16,16 +16,6 @@ if($config['cf_side_title']) {
 	}
 }
 
-/** 종족 정보 **/
-if($config['cf_class_title']) {
-	$ch_cl = array();
-	$class_result = sql_query("select cl_id, cl_name from {$g5['class_table']} where cl_auth <= '{$member['mb_level']}' order by cl_id asc");
-	for($i=0; $row = sql_fetch_array($class_result); $i++) { 
-		$ch_cl[$i]['name'] = $row['cl_name'];
-		$ch_cl[$i]['id'] = $row['cl_id'];
-	}
-
-}
 
 
 $html_title = '퀘스트';
@@ -42,7 +32,7 @@ if ($w == '') {
 } else if ($w == 'u') {
 
 	$html_title .= ' 수정';
-	$quest = sql_fetch("select * from {$g5['quest_table']} where qu_id = '{$qu_id}'");
+	$quest = sql_fetch("select qu.*, it.it_name as qu_it_name from {$g5['quest_table']} qu left join {$g5['item_table']} it on qu.qu_it_id = it.it_id where qu.qu_id = '{$qu_id}'");
 	if (!$quest['qu_id'])
 		alert('존재하지 않는 퀘스트 입니다.');
 	$readonly = 'readonly';
@@ -50,6 +40,11 @@ if ($w == '') {
 
 $g5['title'] = $html_title;
 include_once ('./admin.head.php');
+
+$pg_anchor = '<ul class="anchor">
+	<li><a href="#anc_001">기본 설정</a></li>
+	<li><a href="#anc_002">보상 설정</a></li>
+</ul>';
 
 
 $frm_submit = '<div class="btn_confirm01 btn_confirm">
@@ -75,7 +70,8 @@ $frm_submit .= '</div>';
 <input type="hidden" name="page" value="<?php echo $page ?>">
 
 <section id="anc_001">
-	<h2 class="h2_frm">퀘스트 기본 설정</h2>
+	<h2 class="h2_frm">기본 설정</h2>
+	<?php echo $pg_anchor ?>
 
 	<div class="tbl_frm01 tbl_wrap">
 		<table>
@@ -87,23 +83,33 @@ $frm_submit .= '</div>';
 			</colgroup>
 			<tbody>
 				<tr>
+					<th scope="row">사용</th>
+					<td colspan="2">
+						<input type="checkbox" name="qu_use" value="1" <?=$quest['qu_use'] ? "checked" : ""?> />
+					</td>
+				</tr>
+				<tr>
 					<th scope="row">퀘스트 분류</th>
 					<td colspan="2">
-						<select name="qu_type">
-							<option value="일일" <?=$quest['qu_type'] == "일일" ? "selected" : ""?>>일일 퀘스트</option>
-							<option value="주간" <?=$quest['qu_type'] == "주간" ? "selected" : ""?>>주간 퀘스트</option>
+						<select name="qu_cate">
+							<option value="">설정안함</option>
+							<?
+								$quest_list = explode("||", $config['cf_quest_category']);
+								for($i=0; $i < count($quest_list); $i++) { ?>
+									<option value="<?=$quest_list[$i]?>" <?=$quest['qu_cate'] == $quest_list[$i] ? "selected" : ""?>><?=$quest_list[$i]?></option>
+							<? } ?>
 						</select>
 					</td>
 				</tr>
 
 				<tr>
-					<th scope="row">수행가능</th>
+					<th scope="row">수행가능진영</th>
 					<td colspan="2">
 						<select name="si_id" id="si_id">
 							<option value=""><?=$config['cf_side_title']?> 선택</option>
-		<? for($i=0; $i < count($ch_si); $i++) { ?>
-							<option value="<?=$ch_si[$i]['id']?>" <?=$quest['si_id'] == $ch_si[$i]['id'] ? "selected" : "" ?>><?=$ch_si[$i]['name']?></option>
-		<? } ?>
+							<? for($i=0; $i < count($ch_si); $i++) { ?>
+								<option value="<?=$ch_si[$i]['id']?>" <?=$quest['si_id'] == $ch_si[$i]['id'] ? "selected" : "" ?>><?=$ch_si[$i]['name']?></option>
+							<? } ?>
 						</select>
 					</td>
 				</tr>
@@ -112,6 +118,38 @@ $frm_submit .= '</div>';
 					<th scope="row">퀘스트 이름</th>
 					<td colspan="2">
 						<input type="text" name="qu_title" value="<?php echo get_text($quest['qu_title']) ?>" id="qu_title" required class="required" size="50" maxlength="120">
+					</td>
+				</tr>
+				<tr>
+					<th rowspan="3">메인이미지</th>
+					<td class="bo-right">직접등록</td>
+					<td>
+						<input type="file" name="qu_img_file" value="" size="50">
+					</td></tr><tr>
+					<td class="bo-right">외부경로</td>
+					<td>
+						<input type="text" name="qu_img" value="<?=$quest['qu_img']?>" size="50"/>
+					</td></tr><tr>
+					<td class="bo-right">이미지</td>
+					<td><? if($quest['qu_img']) { ?><img src="<?=$quest['qu_img']?>" style="max-height: 150px;"/><? } ?></td>
+				</tr>
+
+				<tr>
+					<th rowspan="2">퀘스트 제출</th>
+					<td class="bo-right">유형</td>
+					<td>
+						<select name="qu_type">
+							<option value="url" <?=$quest['qu_it_id'] == 0 ? "selected" : "" ?>>URL 제출</option>
+							<option value="item" <?=$quest['qu_it_id'] > 0 ? "selected" : "" ?>>아이템 제출</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td class="bo-right">제출 아이템</th>
+					<td class="bo-right">
+						<input type="hidden" name="qu_it_id" id="qu_it_id" value="<?=$quest['qu_it_id']?>" />
+						<input type="text" name="qu_it_name" value="<?=$quest['qu_it_name']?>" id="qu_it_name" onkeyup="get_ajax_item(this, 'qu_item_list', 'qu_it_id');" />
+						<div id="qu_item_list" class="ajax-list-box"><div class="list"></div></div>
 					</td>
 				</tr>
 
@@ -135,25 +173,54 @@ $frm_submit .= '</div>';
 					</td>
 				</tr>
 
-				
 				<tr>
-					<th scope="row">퀘스트 이미지</th>
+					<th scope="row">퀘스트 내용</th>
 					<td colspan="2">
-						<?php echo help("※ 여러 이미지를 등록 시, 엔터로 구분 해주세요.") ?>
-						<textarea name="qu_image" id="qu_image"><?=$quest['qu_image']?></textarea>
-						<p>
-							ex)<br />
-							<?=G5_URL?>/img/img_01.png<br />
-							<?=G5_URL?>/img/img_02.png<br />
-							<?=G5_URL?>/img/img_03.png<br />
-							...
-						</p>
+						<textarea name="qu_content"><?=$quest['qu_content']?></textarea>
 					</td>
 				</tr>
-				
 			</tbody>
 		</table>
 	</div>
+</section>
+
+<?php echo $frm_submit; ?>
+
+<section id="anc_001">
+	<h2 class="h2_frm">보상 설정</h2>
+	<?php echo $pg_anchor ?>
+
+	<div class="tbl_frm01 tbl_wrap">
+		<table>
+			<colgroup>
+				<col style="width: 130px;">
+				<col>
+			</colgroup>
+			<tbody>
+				<tr>
+					<th scope="row">획득 아이템</th>
+					<td >
+						<input type="hidden" name="it_id" id="it_id" value="<?=$quest['it_id']?>" />
+						<input type="text" name="it_name" value="<?=get_item_name($quest['it_id'])?>" id="it_name" onkeyup="get_ajax_item(this, 'item_list', 'it_id');" />
+						<div id="item_list" class="ajax-list-box"><div class="list"></div></div>
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">획득 <?=$config['cf_money']?></th>
+					<td>
+						<input type="text" name="qu_point" value="<?php echo $quest['qu_point']; ?>">
+					</td>
+				</tr>
+				<tr>
+					<th scope="row">획득 <?=$config['cf_exp_name']?></th>
+					<td>
+						<input type="text" name="qu_exp" value="<?php echo $quest['qu_exp']; ?>">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+
 </section>
 
 <?php echo $frm_submit; ?>

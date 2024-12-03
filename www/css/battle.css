@@ -84,8 +84,8 @@ div.title-bar#battle-room-title { font-size: 20px; }
 .fix-layout > #battle-log-box { display: flex; position: relative; width: 100%; height: 100%; padding: 36px 0 ; z-index: 2; flex-direction: column; }
 
 #battle-log-bg .bg-box { position: relative; flex: 1 1 auto; background-repeat: no-repeat; }
-#battle-log-bg #bg-left.bg-box { background-position: left 40px bottom;}
-#battle-log-bg #bg-right.bg-box { background-position: right 40px bottom;}
+#battle-log-bg #bg-left.bg-box { background-position:left -190px top 250px;}
+#battle-log-bg #bg-right.bg-box { background-position: right -190px top 250px;}
 #battle-log-bg .bg-box .bg-name { position: absolute; top: 250px; font-family: 'DeadStockDemo'; font-size: 48px; color: #7C1717; }
 #battle-log-bg .bg-box #ch1_name.bg-name {
   left: 0;
@@ -125,13 +125,26 @@ div.title-bar#battle-room-title { font-size: 20px; }
 #vital-left .vital-name-wrap .vital-name-box {text-align: right; } /* 반전 */
 #vital-wrap #vital-right.vital-vertical .vital-name-wrap { flex-direction: row-reverse; } /* 반전 */
 
+.refresh {
+    transform: translate(-50%, -60%);
+    left: 50%;
+    top: 159px;
+    width: 40px;
+    height: 40px;
+    background-image: url(/static/img/refresh.png);
+    background-size: contain;
+    background-position: center center;
+    background-repeat: no-repeat;
+    position: absolute;
+}
+
 
 /* 전투장 기록: 텍스트 전투 로그 영역 */
 #battle-log-box > #text-log-wrap { display: flex; position: relative; height: 0; margin: 32px 0; padding: 0 235px; flex: 5 5 300px; flex-direction: row; }
 #text-log-wrap .text-log-border { display: flex; background: linear-gradient(180deg, #393939 0%, #1C1C1C 100%); flex: 1 1 auto; flex-direction: column; overflow-y: auto; border: 5px solid #ACACAC;}
 #text-log-wrap .text-log-box { display: flex; margin: 12px; flex: 0 0 80px; color: #FFF; }
 #text-log-wrap .text-log-box .log-box-padding { flex: 0 0 20px; }
-#text-log-wrap .text-log-box .log-box-thumbnail-border { border: 1.5px solid #000; flex: 0 0 80px; }
+#text-log-wrap .text-log-box .log-box-thumbnail-border { border: 1.5px solid #000; flex: 0 0 60px; }
 #text-log-wrap .text-log-box .log-box-thumbnail-border .log-box-thumbnail { width: 100%; height: 100%; background-size: contain; background-color: #000; border: 1.5px solid #D23030; background-position: bottom; background-repeat: no-repeat; }
 #text-log-wrap .text-log-box .log-box-text-box { padding: 0 18px; flex: 1 1 auto; }
 .text-log-box.reverse { flex-direction: row-reverse; }
@@ -155,7 +168,7 @@ div.title-bar#battle-room-title { font-size: 20px; }
 /* 전투장 기록: 캐릭터 대사 출력 영역 */
 #battle-log-box #conversation-wrap { display: flex; margin-top: 30px; padding: 0 208px; flex: 1 1 160px; }
 #conversation-wrap > div { position: relative; padding: 0 28px; flex: 1 1; }
-#conversation-wrap .conversation-box { width: 100%; height: 100%; padding: 14px 20px; background: linear-gradient(180deg, #8F2A2A 0%, #922D2D 100%); border: 3px solid #FFF; color: #FFF; font-size: 21px; }
+#conversation-wrap .conversation-box { line-height: 27px; width: 100%; height: 100%; padding: 14px 20px; background: linear-gradient(180deg, #8F2A2A 0%, #922D2D 100%); border: 3px solid #FFF; color: #FFF; font-size: 21px; }
 #conversation-wrap .conversation-tail{
   position: absolute;
   width: 0px;

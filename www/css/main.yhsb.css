@@ -60,6 +60,9 @@ table.calendar-table th { border: 1px solid black; font-size: 16px; font-weight:
 table.calendar-table td { border: 1px solid black; }
 table.calendar-table .no-data { display: block; text-align: center; width: 100%; color: rgba(0, 0, 0, 0.3); }
 
+/* outlogin */
+.thumb-wrap .thumb-box#profile-link { background: url(/static/img/bg_member_thumb.png) center / cover no-repeat; }
+
 /* 모바일 */
 @media all and (min-width:640px) { 
     .main-mobile { display: none!important; }

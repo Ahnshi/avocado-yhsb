@@ -116,6 +116,7 @@ if($last){
 				</div>
 			</div>
 		</div>
+		<a onClick="window.location.reload()" style="cursor: pointer;"><div class="refresh"></div></a>
 	</div>
 
 	<!-- 텍스트 전투 로그 영역 -->

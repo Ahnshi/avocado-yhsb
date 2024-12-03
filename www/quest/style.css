@@ -1,0 +1,47 @@
+@charset "utf-8";
+
+.quest-list {display:block;}
+.quest-list dl {padding:0;}
+.quest-list dt {display:block; position:relative;}
+.quest-list dt button {display:block; position:relative; width:100%; background:transparent; border:none; margin:0; padding:15px 100px 15px 15px; color:#fff; text-align:left;}
+.quest-list dt button strong {display:block; overflow:hidden; white-space:nowrap; text-overflow:ellipsis;}
+.quest-list dt button span {display:block; position:absolute; top:50%; right:0; width:100px; text-align:center; border-left:1px solid rgba(255,255,255,.1); transform:translateY(-50%); -webkit-transform:translateY(-50%);}
+.quest-list dd {display:none; border-top:1px solid rgba(255,255,255,.1); margin:0; padding:15px 0 0 0;}
+.quest-list dl.on dd {display:block;}
+.quest-content {display:block; position:relative;}
+.quest-content .thumb {display:block; position:absolute; top:0; left:15px; width:130px;}
+.quest-content .thumb em {display:block; position:relative; border:1px solid rgba(255,255,255,.1); background:rgba(255,255,255,.05);}
+.quest-content .con {display:block; position:relative; padding:0 15px 15px; line-height:1.5;}
+.quest-content .thumb ~ .con {margin-left:160px; padding-left:0;}
+.quest-content .control {display:block; position:relative; margin-top:20px; padding:10px 15px; border-radius:5px; background:rgba(0,0,0,.4); text-align:right;}
+
+.quest-content .control .mem-list {display:block; overflow:hidden; text-align:left;}
+.quest-content .control .mem-list .item {display:inline-block; margin:5px; position:relative;}
+.quest-content .control .mem-list .item a {display:block; position:relative; padding:3px;}
+
+/***** 덮어쓰기 ******/
+.quest-tab{ display: flex; justify-content: center;}
+
+.quest-tab .quest-btn {
+    background-color: #5a5066; 
+    color: rgba(255,255,255,0.7);
+    text-shadow: 0 0 5px rgb(0 0 0 / 40%);
+    box-shadow: 1px 2px 4px 0px rgb(0 0 0 / 20%);
+    width: 80px;
+    height: 36px;
+    margin-right: 10px;
+
+    display: inline-flex;
+    text-align: center;
+    justify-content: space-around;
+    align-items: center;
+
+    cursor: pointer;
+}
+
+.quest-tab .quest-tab-active {
+    background-color: #837198!important;
+    color: rgba(255,255,255,1)!important;
+}
+
+.quest-list .quest-finish {opacity: 0.6;}

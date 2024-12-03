@@ -18,12 +18,16 @@ if ($_POST['act_button'] == "선택수정") {
 		$k = $_POST['chk'][$i];
 
 		$sql = " update {$g5['quest_table']}
-					set qu_type         = '{$_POST['qu_type'][$k]}',
+					set qu_cate         = '{$_POST['qu_cate'][$k]}',
 						si_id             = '{$_POST['si_id'][$k]}',
 						qu_title             = '{$_POST['qu_title'][$k]}',
 						qu_sdate          = '{$_POST['qu_sdate'][$k]}',
-						qu_edate         = '{$_POST['qu_edate'][$k]}'
+						qu_edate         = '{$_POST['qu_edate'][$k]}',
+						qu_point         = '{$_POST['qu_point'][$k]}',
+						qu_exp         = '{$_POST['qu_exp'][$k]}',
+						qu_use         = '{$_POST['qu_use'][$k]}'
 				  where qu_id               = '{$_POST['qu_id'][$k]}' ";
+		//echo $sql;
 		sql_query($sql);
 	}
 
@@ -37,9 +41,8 @@ if ($_POST['act_button'] == "선택수정") {
 		if (!$temp_qu_id) { return; }
 
 		sql_query(" delete from {$g5['quest_table']} where qu_id = '{$temp_qu_id}'");
-		
+		sql_query(" delete from {$g5['quest_member_table']} where qu_id = '{$temp_qu_id}'");
 	}
 }
-
 goto_url('./quest_list.php?'.$qstr."&cate=".$cate."&map_id=".$map_id);
 ?>

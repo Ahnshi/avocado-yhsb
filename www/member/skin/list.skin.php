@@ -37,7 +37,9 @@ for ($i=0; $i < $size; $i++) {
 			<ul class="member-item-list">
 				<?for ($ii=0; $ii < sizeof($list_arr[$i]); $ii++) { ?>
 					<li class="member-item" data-ch_id="<?=$list_arr[$i][$ii]['ch_id']?>">
-						<div class="thumb-box" style="background-image:url(<?=$list_arr[$i][$ii]['ch_thumb']?>)"></div>
+						<div class="thumb-box">
+							<div style="width:100%; height: 100%; background: center center/cover url(<?=$list_arr[$i][$ii]['ch_thumb']?>)"></div>
+						</div>
 						<div class="name-box"><span><?=$list_arr[$i][$ii]['ch_name']?></span></div>
 					</li>
 				<?}?>
@@ -51,7 +53,9 @@ for ($i=0; $i < $size; $i++) {
 				for ($ii=0; $ii < sizeof($list_arr[$i]); $ii++) { 
 					if($list_arr[$i][$ii]['ch_id']) { ?>
 					<li class="member-item" data-ch_id="<?=$list_arr[$i][$ii]['ch_id']?>">
-						<div class="thumb-box" style="background-image:url(<?=$list_arr[$i][$ii]['ch_thumb']?>)"></div>
+						<div class="thumb-box">
+							<div style="width:100%; height: 100%; background: center center/cover url(<?=$list_arr[$i][$ii]['ch_thumb']?>)"></div>
+						</div>
 						<div class="name-box"><span><?=$list_arr[$i][$ii]['ch_name']?></span></div>
 					</li>
 				<?}}?>
@@ -64,7 +68,9 @@ for ($i=0; $i < $size; $i++) {
 				for ($ii=0; $ii < sizeof($list_arr[$i]); $ii++) { 
 					if($list_arr[$i][$ii]['ch_id']) { ?>
 					<li class="member-item" data-ch_id="<?=$list_arr[$i][$ii]['ch_id']?>">
-						<div class="thumb-box" style="background-image:url(<?=$list_arr[$i][$ii]['ch_thumb']?>)"></div>
+						<div class="thumb-box">
+							<div style="width:100%; height: 100%; background: center center/cover url(<?=$list_arr[$i][$ii]['ch_thumb']?>)"></div>
+						</div>
 						<div class="name-box"><span><?=$list_arr[$i][$ii]['ch_name']?></span></div>
 					</li>
 				<?}}?>
@@ -81,6 +87,12 @@ for ($i=0; $i < $size; $i++) {
 
 <script>
 $().ready(()=>{
+
+	$('.phrase-box > span').each((el)=>{
+		console.log(el);
+	})
+
+
 	$('.member-item').on('click', function() {
 		const ch_id = $(this)?.data('ch_id')
 		let url = "/member/viewer.php"
@@ -136,8 +148,16 @@ $().ready(()=>{
 					
 					nameBox.addClass('active')
 
-					const phrase = $('.phrase-box > span').first()
-					phrase.html(avValue)
+
+					const phrase_ = $('.phrase-box').first()
+					phrase_.remove()
+					const phrase = $('.name-phrase-box').first()
+					if(avValue.length > 28){
+						phrase.append(`<div class="phrase-box marquee"><span>${avValue}</span></div>`)
+					}else{
+						phrase.append(`<div class="phrase-box"><span>${avValue}</span></div>`)
+					}
+					
 
 					const img = $('.member-portrait').first()
 					img.css({'background-image': `url(${chBody})`})
@@ -152,3 +172,22 @@ $().ready(()=>{
 	})
 })
 </script>
+
+
+<style>
+.marquee {
+  overflow: hidden; /* 넘치는 텍스트 숨기기 */
+}
+
+.marquee span {
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+  animation: marquee 20s linear infinite; /* 애니메이션 설정 */
+}
+
+@keyframes marquee {
+  0% { transform: translateX(100%); } /* 시작 위치 */
+  100% { transform: translateX(-100%); } /* 종료 위치 */
+}
+
+
+</style>

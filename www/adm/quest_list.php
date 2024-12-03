@@ -28,7 +28,7 @@ if ($stx) {
 	$sql_search .= " ) ";
 }
 
-if($cate) { $sql_search .= " and qu_type = '{$cate}' "; }
+if($cate) { $sql_search .= " and qu_cate = '{$cate}' "; }
 if($side) { $sql_search .= " and si_id = '{$side}' "; }
 
 if (!$sst) {
@@ -54,7 +54,9 @@ $listall = '<a href="'.$_SERVER['PHP_SELF'].'" class="ov_listall">전체목록</
 $g5['title'] = '퀘스트 관리';
 include_once('./admin.head.php');
 
-$colspan = 8;
+$colspan = 13;
+
+
 ?>
 
 <div class="local_ov01 local_ov">
@@ -65,15 +67,19 @@ $colspan = 8;
 <form name="fsearch" id="fsearch" class="local_sch01 local_sch" method="get">
 
 <select name="cate" id="cate">
-	<option value="">종류</option>
-	<option value="일일" <?=$cate == "일일" ? "selected" : ""?>>일일 퀘스트</option>
-	<option value="주간" <?=$cate == "주간" ? "selected" : ""?>>주간 퀘스트</option>
+	<option value="">분류</option>
+	<?
+		$quest_list = explode("||", $config['cf_quest_category']);
+		for($i=0; $i < count($quest_list); $i++) { ?>
+			<option value="<?=$quest_list[$i]?>" <?=$cate == $quest_list[$i] ? "selected" : ""?>><?=$quest_list[$i]?></option>
+	<? } ?>
 </select>
 
 <select name="side" id="side">
-	<option value="">세력</option>
-	<option value="일일" <?=$cate == "일일" ? "selected" : ""?>>일일 퀘스트</option>
-	<option value="주간" <?=$cate == "주간" ? "selected" : ""?>>주간 퀘스트</option>
+	<option value=""><?=$config['cf_side_title']?> 선택</option>
+	<? for($i=0; $i < count($ch_si); $i++) { ?>
+		<option value="<?=$ch_si[$i]['id']?>" <?=$side == $ch_si[$i]['id'] ? "selected" : "" ?>><?=$ch_si[$i]['name']?></option>
+	<? } ?>
 </select>
 
 <label for="sfl" class="sound_only">검색대상</label>
@@ -110,30 +116,41 @@ $colspan = 8;
 		<colgroup>
 			<col style="width:  40px;" />
 			<col style="width: 100px;" />
-			<col style="width: 100px;" />
-			<col style="width: 130px;" />
+			<col style="width: 140px;" />
 			<col />
 			
-			<col style="width: 70px;"/>
-			<col style="width: 70px;"/>
+			<col style="width: 110px;"/>
+			<col style="width: 110px;"/>
 
+			<col style="width: 50px;"/>
+			<col style="width: 110px;"/>
+			<col style="width: 80px;"/>
+			<col style="width: 80px;"/>
+			
+			<col style="width: 50px;"/>
 			<col style="width: 100px;"/>
+			<col style="width: 50px;"/>
+			<col style="width: 50px;"/>
 		</colgroup>
 		<thead>
 			<tr>
 				<th scope="col" class="bo-right">
-					<label for="chkall" class="sound_only">퀘스트 전체</label>
 					<input type="checkbox" name="chkall" value="1" id="chkall" onclick="check_all(this.form)">
 				</th>
 				<th scope="col">분류</th>
 				<th scope="col">세력</th>
 				<th scope="col">퀘스트 이름</th>
 
-				<th scope="col">이미지</th>
-
 				<th scope="col">시작일</th>
 				<th scope="col">종료일</th>
+				
+				<th scope="col" colspan="2">아이템</th>
+				<th scope="col"><?=$config['cf_money']?></th>
+				<th scope="col"><?=$config['cf_exp_name']?></th>
 
+				<th scope="col">사용</th>
+				<th scope="col">참가자</th>
+				<th scope="col">보기</th>
 				<th scope="col">관리</th>
 			</tr>
 		</thead>
@@ -146,56 +163,66 @@ $colspan = 8;
 
 			<tr class="<?php echo $bg; ?>">
 				<td>
-					<label for="chk_<?php echo $i; ?>" class="sound_only"><?php echo get_text($quest['qu_title']) ?></label>
 					<input type="checkbox" name="chk[]" value="<?php echo $i ?>" id="chk_<?php echo $i ?>">
 					<input type="hidden" name="qu_id[<?php echo $i ?>]" value="<?php echo $quest['qu_id'] ?>" />
 				</td>
 
 				<td>
-					<select name="qu_type[<?php echo $i ?>]" id="qu_type_<?php echo $i ?>" style="display: block;">
-						<option value="일일" <?=$quest['qu_type'] == "일일" ? "selected" : ""?>>일일 퀘스트</option>
-						<option value="주간" <?=$quest['qu_type'] == "주간" ? "selected" : ""?>>주간 퀘스트</option>
+					<select name="qu_cate[<?php echo $i ?>]" style="display: block; width:100%;">
+						<option value="">설정안함</option>
+							<?
+								$quest_list = explode("||", $config['cf_quest_category']);
+								for($j=0; $j < count($quest_list); $j++) { ?>
+									<option value="<?=$quest_list[$j]?>" <?=$quest['qu_cate'] == $quest_list[$j] ? "selected" : ""?>><?=$quest_list[$j]?></option>
+							<? } ?>
 					</select>
 				</td>
 				<td>
-					<select name="si_id[<?php echo $i ?>]" style="width: 80px;">
+					<select name="si_id[<?php echo $i ?>]" style="display: block; width:100%;">
 						<option value=""><?=$config['cf_side_title']?> 선택</option>
-					<? for($i=0; $i < count($ch_si); $i++) { ?>
-						<option value="<?=$ch_si[$i]['id']?>" <?=$quest['si_id'] == $ch_si[$i]['id'] ? "selected" : "" ?>><?=$ch_si[$i]['name']?></option>
+					<? for($j=0; $j < count($ch_si); $j++) { ?>
+						<option value="<?=$ch_si[$j]['id']?>" <?=$quest['si_id'] == $ch_si[$j]['id'] ? "selected" : "" ?>><?=$ch_si[$j]['name']?></option>
 					<? } ?>
 					</select>
-
-
 				</td>
 				<td class="txt-center">
-					<input type="text" name="qu_title[<?php echo $i ?>]" value="<?php echo get_text($quest['qu_title']) ?>" id="qu_title_<?php echo $i ?>" size="20">
-				</td>
-
-				<td class="txt-left">
-				<?
-					$quest['qu_image'] = nl2br($quest['qu_image']);
-					$img_data = explode("<br />", $quest['qu_image']);
-					for($k = 0; $k < count($img_data); $k++) {
-						$q_img = $img_data[$k];
-						if(!$q_img) continue;
-				?>
-					<a href="<?=$q_img?>" target="_blank" style="display: block; margin: 2px; width: 50px; height: 50px; border: 1px solid #eee; overflow: hidden; float: left;">
-						<img src="<?=$q_img?>" style="max-width: 120%;" />
-					</a>
-				<? } ?>
+					<input type="text" name="qu_title[<?php echo $i ?>]" value="<?php echo get_text($quest['qu_title']) ?>" size="20" style="width:100%;">
 				</td>
 
 				<td class="txt-center">
-					<input type="text" name="qu_sdate[<?php echo $i ?>]" value="<?php echo get_text($quest['qu_sdate']) ?>" id="qu_sdate_<?php echo $i ?>" size="20">
+					<input type="text" name="qu_sdate[<?php echo $i ?>]" value="<?php echo get_text($quest['qu_sdate']) ?>" id="qu_sdate_<?php echo $i ?>" size="20" style="width:100%;">
 				</td>
 				<td class="txt-center">
-					<input type="text" name="qu_edate[<?php echo $i ?>]" value="<?php echo get_text($quest['qu_edate']) ?>" id="qu_edate_<?php echo $i ?>" size="20">
+					<input type="text" name="qu_edate[<?php echo $i ?>]" value="<?php echo get_text($quest['qu_edate']) ?>" id="qu_edate_<?php echo $i ?>" size="20" style="width:100%;">
 				</td>
-				
+
+				<td>
+					<? if($quest['it_id']) { ?>
+						<img src="<?=get_item_img($quest['it_id'])?>" style="max-width: 20px;"/>
+					<? } ?>
+				</td>
+				<td>
+					<?=get_item_name($quest['it_id'])?>
+				</td>
+				<td>
+					<input type="text" name="qu_point[<?php echo $i ?>]" value="<?php echo get_text($quest['qu_point']) ?>" size="20" style="width:100%;">
+				</td>
+				<td>
+					<input type="text" name="qu_exp[<?php echo $i ?>]" value="<?php echo get_text($quest['qu_exp']) ?>" size="20" style="width:100%;">
+				</td>
+
+				<td>
+					<input type="checkbox" name="qu_use[<?php echo $i ?>]" value="1" <?php echo $quest['qu_use']?"checked":"" ?>>
+				</td>
+
+				<td>
+					<a href="./quest_member_list.php?qu_id=<?=$quest['qu_id']?>">참가자목록</a>
+				</td>
 				<td class="td_mngsmall">
-					<a href="<?=G5_URL?>/quest.php?qu_id=<?=$quest['qu_id']?>" target="_blank" onclick="popup_window(this.href, '', 'width=500, height=500'); return false;">보기</a>
+					<a href="<?=G5_URL?>/quest/index.php?qu_id=<?=$quest['qu_id']?>" target="_blank" onclick="popup_window(this.href, '', 'width=780, height=800'); return false;">보기</a>
+				</td>
+				<td class="td_mngsmall">
 					<?php echo $one_update ?>
-					<?php echo $one_copy ?>
 				</td>
 			</tr>
 			
