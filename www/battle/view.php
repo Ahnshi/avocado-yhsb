@@ -132,7 +132,37 @@ if($last){
 			$thumb = $is_ch1 ? $room['ch1_thumb'] : $room['ch2_thumb'];
 			$command = $is_ch1 ? $room_log_arr[$i]['brl_ch1_command'] : $room_log_arr[$i]['brl_ch2_command'];
 			$text = $is_ch1 ? $room_log_arr[$i]['brl_ch1_text'] : $room_log_arr[$i]['brl_ch2_text'];
-			$direction = $is_ch1 ? '' : 'reverse';?>
+			$direction = $is_ch1 ? '' : 'reverse';
+
+			if($command=='회상'){
+		?>
+			<div class="text-log-box flashback <?=$direction?>">
+				<div class="log-box-padding"></div>
+				<div class="log-box-thumbnail-border">
+					<div class="log-box-thumbnail" style="background-image:url(<?=$thumb?>)"></div>
+				</div>
+				<div class="log-box-text-box">
+					<p class="log-command">[<?=$command?>]</p>
+					<p class="log-text"><?=$text?></p>
+				</div>
+				<div class="log-flashback-box">
+					<div class="log-flashback-img" style="background-image:url(<?=$is_ch1?$ch1['flashback_img']:$ch2['flashback_img']?>)"></div>
+					<div class="log-flashback-speech"></div>
+				</div>
+			</div>
+			<div class="text-log-box <?=$direction?>">
+				<div class="log-box-padding"></div>
+				<div class="log-box-thumbnail-border">
+					<div class="log-box-thumbnail" style="background-image:url(<?=$thumb?>)"></div>
+				</div>
+				<div class="log-box-text-box">
+					<p class="log-command">[<?=$command?>]</p>
+					<p class="log-text">회상카드를 사용했습니다</p>
+				</div>
+			</div>
+		<?
+			}else{ //그 외의 커맨드
+		?>
 			<div class="text-log-box <?=$direction?>">
 				<div class="log-box-padding"></div>
 				<div class="log-box-thumbnail-border">
@@ -143,7 +173,7 @@ if($last){
 					<p class="log-text"><?=$text?></p>
 				</div>
 			</div>
-		<?}?>
+		<?}}?>
 		<?if($room['br_status']=='KNOCKOUT') echo "<div class=\"text-log-box knockout\"><span>전투가 종료되었습니다!</span></div>";?>
 		</div>
 	</div>

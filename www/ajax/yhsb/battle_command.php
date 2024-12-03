@@ -29,6 +29,8 @@ if($_POST['command']&&$_POST['br_id']&&$_POST['ch_id']){
     http_response_code(400); echo '전투가 종료되었습니다'; exit;
   }else if(!$is_my_turn){
     http_response_code(400); echo '상대의 턴입니다'; exit;
+  }else if(get_is_weekend()){
+    http_response_code(400); echo '주말에는 전투 활동이 불가능합니다'; exit;
   }
 
   // 내 캐릭터 정보

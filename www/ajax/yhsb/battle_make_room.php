@@ -26,6 +26,10 @@ if(!$ch1) {
 	http_response_code(400); echo '상대가 현재 전투 가능한 상황이 아닙니다(체력 부족)'; exit;
 }else if($_POST['br_ch1_id']==$_POST['br_ch2_id']){
 	http_response_code(400); echo '서로 다른 두 명의 캐릭터를 선택해주세요'; exit;
+}else if(get_is_weekend()){
+	http_response_code(400); echo '주말에는 전투 신청이 불가능합니다'; exit;
+}else if(get_today_battle_req_count($_POST['br_ch1_id'])>=3){
+	http_response_code(400); echo '하루에 세 번까지 전투 신청이 가능합니다'; exit;
 }
 
 // MAKE BATTLE ROOM

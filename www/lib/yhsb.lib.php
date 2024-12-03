@@ -5,8 +5,15 @@ if (!defined('_GNUBOARD_')) exit;
 function get_character_ranking($ch_id) {
 
 	$sql = "
-		SELECT (RANK() OVER (ORDER BY ch_score DESC)) as score_ranking, ch.*
-		FROM yhsb.avo_character ch;
+		SELECT
+				@rank := IF(@prev_score = ch_score, @rank, @rank + 1) AS score_ranking,
+				ch.*,
+				@prev_score := ch_score
+		FROM
+				yhsb.avo_character ch,
+				(SELECT @rank := 0, @prev_score := NULL) AS vars
+		ORDER BY
+				ch_score DESC;
 	";
 	$result = sql_query($sql);
 
@@ -25,11 +32,20 @@ function get_character_ranking($ch_id) {
 function get_character_ranking_list() {
 
 	$sql = "
-		SELECT (RANK() OVER (ORDER BY ch_score DESC)) as score_ranking, ch.*, cs.si_name as si_name, lv.lv_name as lv_name
-		FROM yhsb.avo_character ch
-		LEFT JOIN avo_character_side cs ON ch.ch_side = cs.si_id		
+		SELECT ch.*, cs.si_name as si_name, lv.lv_name as lv_name
+		FROM (
+			SELECT
+					@rank := IF(@prev_score = ch_score, @rank, @rank + 1) AS score_ranking,
+					ch.*,
+					@prev_score := ch_score
+			FROM
+					yhsb.avo_character ch,
+					(SELECT @rank := 0, @prev_score := NULL) AS vars
+			ORDER BY
+					ch_score DESC
+		) ch
+		LEFT JOIN avo_character_side cs ON ch.ch_side = cs.si_id
 		LEFT JOIN avo_level_setting lv ON ch.ch_rank = lv.lv_id
-		;
 	";
 	$result = sql_query($sql);
 
@@ -39,7 +55,6 @@ function get_character_ranking_list() {
 	return $arr;
 
 }
-
 
 // 추가 정보를 포함한 캐릭터의 전체 정보를 불러옵니다
 function get_character_full_info($ch_id) {
@@ -52,7 +67,6 @@ function get_character_full_info($ch_id) {
 	}
 	$ch_ranking = get_character_ranking($ch_id);
 	$ch['ch_ranking'] = $ch_ranking;
-	$ch['mb_nick'] = get_member_name($ch['mb_id']); // 24.11.29 2z 멤버닉네임 정보 추가
 
 	return $ch;
 }
@@ -91,6 +105,40 @@ function get_side_score_2($si_id) {
 	if(!$val) $val = 0;
 
 	return $val;
+}
+
+// 캐릭터가 오늘 몇 번의 전투 신청을 했는지 불러옵니다
+function get_today_battle_req_count($ch_id){
+
+	$today = date('Y-m-d'); //=> '2024-11-20'
+	$tomorrow = date("Y-m-d", strtotime("tomorrow")); //=> '2024-11-21'
+
+	$result = sql_fetch("
+		SELECT COUNT(*) as count
+		FROM avo_battle_room br
+		WHERE br.br_ch1_id = {$ch_id}
+			AND br.br_created_datetime >= '{$today}'
+			AND br.br_created_datetime < '{$tomorrow}';
+	");
+	$val = $result['count'];
+
+	return $val;
+}
+
+// 캐릭터가 현재 전투 신청이 가능한 상태인지 확인합니다
+function get_can_req_battle($ch_id){
+
+	$canReq = true;
+	$count = get_today_battle_req_count($ch_id);
+
+	if($count >= 3){
+		$canReq = false;
+	}else if(get_is_weekend()){
+		$canReq = false;
+	}
+
+	return $canReq;
+
 }
 
 // br_id를 기준으로 전투장을 불러옵니다
@@ -197,7 +245,8 @@ function get_battle_room_log_list($br_id) {
 				LEFT JOIN avo_character ch1 ON br.br_ch1_id = ch1.ch_id
 				LEFT JOIN avo_character ch2 ON br.br_ch2_id = ch2.ch_id
 		) br ON brl.br_id = br.br_id
-		WHERE brl.br_id = {$br_id};
+		WHERE brl.br_id = {$br_id}
+		ORDER BY brl.brl_id DESC;
 	";
 	$result = sql_query($sql);
 
@@ -260,6 +309,12 @@ function get_inven_potion_list($ch_id){
 	$i = 0;
 
 	return $inven_list;
+}
+
+// 주말 여부 확인
+function get_is_weekend(){
+	$w = date('w');
+	return ( $w == 0 || $w == 1 ) ? true : false;
 }
 
 ?>

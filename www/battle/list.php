@@ -6,8 +6,8 @@ include_once(G5_PATH.'/head.php');
 $ch_arr = array();
 $ch_all = get_character_list();
 for ($i=0; $i < sizeof($ch_all); $i++) {
-	// 내 캐릭터를 제외한 모든 캐릭터를 전투 가능 캐릭터 목록에 넣음
-	if($ch_all[$i]['ch_id'] != $character['ch_id']){
+	// 내 캐릭터, npc 캐릭터를 제외한 모든 캐릭터를 전투 가능 캐릭터 목록에 넣음
+	if($ch_all[$i]['ch_id'] != $character['ch_id'] && $ch_all[$i]['ch_type'] != 'npc'){
 		array_push($ch_arr, $ch_all[$i]);
 	}
 }
