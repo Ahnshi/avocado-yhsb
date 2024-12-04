@@ -164,3 +164,9 @@ INSERT INTO yhsb.avo_article_value (av_id, ch_id, ar_theme, ar_code, av_value, a
 DELETE FROM yhsb.avo_point WHERE po_id > 0;
 DELETE FROM yhsb.avo_battle_room WHERE br_id > 0;
 DELETE FROM yhsb.avo_battle_room_log WHERE brl_id > 0;
+
+# 241204 추가
+ALTER TABLE avo_battle_room ADD br_ch1_dmg_buff INT DEFAULT 0 NULL AFTER br_ch1_dmg_cut_rate;
+ALTER TABLE avo_battle_room ADD br_ch2_dmg_buff INT DEFAULT 0 NULL AFTER br_ch2_dmg_cut_rate;
+ALTER TABLE avo_battle_room ADD br_ch1_flashback_used INT DEFAULT 0 NULL AFTER br_ch1_potion_used;
+ALTER TABLE avo_battle_room ADD br_ch2_flashback_used INT DEFAULT 0 NULL AFTER br_ch2_potion_used;

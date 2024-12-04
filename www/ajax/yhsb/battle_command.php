@@ -47,31 +47,86 @@ if($_POST['command']&&$_POST['br_id']&&$_POST['ch_id']){
   // 공격
   if($command=='공격'){
 
+    //1. 'DAMAGE' 연동 스탯 불러오기
+    // - 첫 턴인 경우 1/3로 감소
+    // - 내 대미지 추가량(회상스킬 사용 시 증가) 반영 -> 평타에만 반영되며 이 수치가 있을 경우 필살기 사용 불가
+    // - 상대의 대미지 경감률(회상스킬 사용 시 증가) 반영
+
+    //2. 대미지 적용 후 변동된 체력 계산
+    // - 0 이하로 내려갈 경우 0으로
+
+    //3. 커맨드 메시지 작성
+    // - "{A}의 공격이 {B}에게 {damage}의 대미지를 입혔습니다.\n현재 {B}의 남은 체력은 {hp}입니다"
+
+    //4. 에너지 증가, 내 대미지 추가량 초기화, 상대의 대미지 경감률 초기화, 내 턴을 false로 변경하고 상대 턴을 true로 변경
+
     if($im_ch1){
+
+      $brl_ch1_command = $command;
+
+      //1. 'DAMAGE' 연동 스탯 불러오기
       $damage = get_status_extra('DAMAGE', $room['br_ch1_id'])['value'];
       if($is_first_turn) $damage = round($damage / 3);
+      $damage = $damage + $room['br_ch1_dmg_buff'];
       $damage = round((100 - $room['br_ch2_dmg_cut_rate'])/100 * $damage);
-      $hp = ($room['ch2_current_hp'] - $damage) >= 0 ? $room['ch2_current_hp'] - $damage : 0;
-      $brl_ch1_command = $command;
-      $brl_ch1_text = "{$ch['ch_name']}의 공격이 {$re_ch['ch_name']}에게 {$damage}의 대미지를 입혔습니다.<br/>현재 {$re_ch['ch_name']}의 남은 체력은 {$hp}입니다.";
       $brl_ch2_damaged += $damage;
-      $sql = "UPDATE avo_battle_room SET br_ch1_energy = br_ch1_energy + 1, br_ch2_dmg_cut_rate = 0, br_ch1_turn = FALSE, br_ch2_turn = TRUE WHERE br_id = {$br_id}";
+
+      //2. 대미지 적용 후 변동된 체력 계산
+      $hp = ($room['ch2_current_hp'] - $damage) >= 0 ? $room['ch2_current_hp'] - $damage : 0;
+
+      //3. 커맨드 메시지 작성
+      $brl_ch1_text = "{$ch['ch_name']}의 공격이 {$re_ch['ch_name']}에게 {$damage}의 대미지를 입혔습니다.<br/>현재 {$re_ch['ch_name']}의 남은 체력은 {$hp}입니다.";
+
+      //4. 에너지 증가, 내 대미지 추가량 초기화, 상대의 대미지 경감률 초기화, 내 턴을 false로 변경하고 상대 턴을 true로 변경
+      $sql = "UPDATE avo_battle_room SET br_ch1_energy = br_ch1_energy + 1, br_ch1_dmg_buff = 0, br_ch2_dmg_cut_rate = 0, br_ch1_turn = FALSE, br_ch2_turn = TRUE WHERE br_id = {$br_id}";
       sql_query($sql);
+
     }else{
+
+      $brl_ch2_command = $command;
+
+      //1. 'DAMAGE' 연동 스탯 불러오기
       $damage = get_status_extra('DAMAGE', $room['br_ch2_id'])['value'];
       if($is_first_turn) $damage = round($damage / 3);
+      $damage = $damage + $room['br_ch2_dmg_buff'];
       $damage = round((100 - $room['br_ch1_dmg_cut_rate'])/100 * $damage);
-      $hp = ($room['ch1_current_hp'] - $damage) >= 0 ? $room['ch1_current_hp'] - $damage : 0;
-      $brl_ch2_command = $command;
-      $brl_ch2_text = "{$ch['ch_name']}의 공격이 {$re_ch['ch_name']}에게 {$damage}의 대미지를 입혔습니다.<br/>현재 {$re_ch['ch_name']}의 남은 체력은 {$hp}입니다.";
       $brl_ch1_damaged += $damage;
-      $sql = "UPDATE avo_battle_room SET br_ch2_energy = br_ch2_energy + 1, br_ch1_dmg_cut_rate = 0, br_ch2_turn = FALSE, br_ch1_turn = TRUE WHERE br_id = {$br_id}";
+
+      //2. 대미지 적용 후 변동된 체력 계산
+      $hp = ($room['ch1_current_hp'] - $damage) >= 0 ? $room['ch1_current_hp'] - $damage : 0;
+
+      //3. 커맨드 메시지 작성
+      $brl_ch2_text = "{$ch['ch_name']}의 공격이 {$re_ch['ch_name']}에게 {$damage}의 대미지를 입혔습니다.<br/>현재 {$re_ch['ch_name']}의 남은 체력은 {$hp}입니다.";
+
+      //4. 에너지 증가, 내 대미지 추가량 초기화, 상대의 대미지 경감률 초기화, 내 턴을 false로 변경하고 상대 턴을 true로 변경
+      $sql = "UPDATE avo_battle_room SET br_ch2_energy = br_ch2_energy + 1, br_ch2_dmg_buff = 0, br_ch1_dmg_cut_rate = 0, br_ch2_turn = FALSE, br_ch1_turn = TRUE WHERE br_id = {$br_id}";
       sql_query($sql);
+
     }
 
   }else if($command=='필살기'){
 
+    //0. VALIDATION
+    // - 에너지가 3미만일 경우 사용 불가
+    // - 이 전투방에서 이미 사용한 경우 사용 불가
+    // - 나에게 대미지 버프가 걸려있는 경우(회상 사용 직후로 판단) 사용 불가
+
+    //1. 'DAMAGE' 연동 스탯 불러오기
+    // - 대미지 20추가(필살기)
+    // - 첫 턴인 경우 1/3로 감소
+    // - 상대의 대미지 경감률(회상스킬 사용 시 증가) 반영
+
+    //2. 대미지 적용 후 변동된 체력 계산
+    // - 0 이하로 내려갈 경우 0으로
+
+    //3. 커맨드 메시지 작성
+    // - "{A}의 필살기가 {B}에게 {damage}의 대미지를 입혔습니다.\n현재 {B}의 남은 체력은 {hp}입니다"
+
+    //4. 에너지 초기화, 상대의 대미지 경감률 초기화, 내 턴을 false로 변경하고 상대 턴을 true로 변경
+
     if($im_ch1){
+
+      //0. VALIDATION
       if($room['br_ch1_energy']<3){
         http_response_code(400);
         echo '에너지가 부족합니다.';
@@ -80,17 +135,33 @@ if($_POST['command']&&$_POST['br_id']&&$_POST['ch_id']){
         http_response_code(400);
         echo '한 번만 사용할 수 있습니다.';
         exit;
+      }else if($room['br_ch1_dmg_buff']>0){
+        http_response_code(400);
+        echo '회상카드 사용 후에는 필살기 사용이 불가능합니다.';
+        exit;
       }
+
+      $brl_ch1_command = $command;
+
+      //1. 'DAMAGE' 연동 스탯 불러오기
       $damage = get_status_extra('DAMAGE', $room['br_ch1_id'], 0, 20)['value']; //필살기는 대미지 20 추가
       if($is_first_turn) $damage = round($damage / 3);
       $damage = round((100 - $room['br_ch2_dmg_cut_rate'])/100 * $damage);
-      $hp = ($room['ch2_current_hp'] - $damage) >= 0 ? $room['ch2_current_hp'] - $damage : 0;
-      $brl_ch1_command = $command;
-      $brl_ch1_text = "{$ch['ch_name']}의 필살기가 {$re_ch['ch_name']}에게 {$damage}의 대미지를 입혔습니다.<br/>현재 {$re_ch['ch_name']}의 남은 체력은 {$hp}입니다.";
       $brl_ch2_damaged += $damage;
+
+      //2. 대미지 적용 후 변동된 체력 계산
+      $hp = ($room['ch2_current_hp'] - $damage) >= 0 ? $room['ch2_current_hp'] - $damage : 0;
+
+      //3. 커맨드 메시지 작성
+      $brl_ch1_text = "{$ch['ch_name']}의 필살기가 {$re_ch['ch_name']}에게 {$damage}의 대미지를 입혔습니다.<br/>현재 {$re_ch['ch_name']}의 남은 체력은 {$hp}입니다.";
+
+      //4. 에너지 초기화, 상대의 대미지 경감률 초기화, 필살기 사용 여부 true로 변경, 내 턴을 false로 변경하고 상대 턴을 true로 변경
       $sql = "UPDATE avo_battle_room SET br_ch1_energy = 0, br_ch1_skill_used = 1, br_ch2_dmg_cut_rate = 0, br_ch1_turn = FALSE, br_ch2_turn = TRUE  WHERE br_id = {$br_id}";
       sql_query($sql);
+
     }else{
+
+      //0. VALIDATION
       if($room['br_ch2_energy']<3){
         http_response_code(400);
         echo '에너지가 부족합니다.';
@@ -99,30 +170,78 @@ if($_POST['command']&&$_POST['br_id']&&$_POST['ch_id']){
         http_response_code(400);
         echo '한 번만 사용할 수 있습니다.';
         exit;
+      }else if($room['br_ch2_dmg_buff']>0){
+        http_response_code(400);
+        echo '회상카드 사용 후에는 필살기 사용이 불가능합니다.';
+        exit;
       }
+
+      $brl_ch2_command = $command;
+
+      //1. 'DAMAGE' 연동 스탯 불러오기
       $damage = get_status_extra('DAMAGE', $room['br_ch2_id'], 0, 20)['value']; //필살기는 대미지 20 추가
       if($is_first_turn) $damage = round($damage / 3);
       $damage = round((100 - $room['br_ch1_dmg_cut_rate'])/100 * $damage);
-      $hp = ($room['ch1_current_hp'] - $damage) >= 0 ? $room['ch1_current_hp'] - $damage : 0;
-      $brl_ch2_command = $command;
-      $brl_ch2_text = "{$ch['ch_name']}의 필살기가 {$re_ch['ch_name']}에게 {$damage}의 대미지를 입혔습니다.<br/>현재 {$re_ch['ch_name']}의 남은 체력은 {$hp}입니다.";
       $brl_ch1_damaged += $damage;
+
+      //2. 대미지 적용 후 변동된 체력 계산
+      $hp = ($room['ch1_current_hp'] - $damage) >= 0 ? $room['ch1_current_hp'] - $damage : 0;
+
+      //3. 커맨드 메시지 작성
+      $brl_ch2_text = "{$ch['ch_name']}의 필살기가 {$re_ch['ch_name']}에게 {$damage}의 대미지를 입혔습니다.<br/>현재 {$re_ch['ch_name']}의 남은 체력은 {$hp}입니다.";
+
+      //4. 에너지 초기화, 상대의 대미지 경감률 초기화, 필살기 사용 여부 true로 변경, 내 턴을 false로 변경하고 상대 턴을 true로 변경
       $sql = "UPDATE avo_battle_room SET br_ch2_energy = 0, br_ch2_skill_used = 1, br_ch1_dmg_cut_rate = 0, br_ch2_turn = FALSE, br_ch1_turn = TRUE  WHERE br_id = {$br_id}";
       sql_query($sql);
+
     }
 
   }else if($command=='회상'){
 
+    //0. VALIDATION
+    // - 이미 회상 카드를 사용한 경우 사용 불가
+
+    //1. 커맨드 메시지 작성
+    // - 프로필에 등록 된 회상 멘트 불러오기
+
+    //2. 내 대미지 추가량 증가(10), 내 대미지 경감률 증가(50%), 회상 카드 사용 여부 true로 변경
+
     if($im_ch1){
+
+      //0. VALIDATION
+      if($room['br_ch1_flashback_used']){
+        http_response_code(400);
+        echo '한 번만 사용할 수 있습니다.';
+        exit;
+      }
+
       $brl_ch1_command = $command;
+
+      //1. 커맨드 메시지 작성
       $brl_ch1_text = get_character_info($room['br_ch1_id'], 'flashback_text');
-      $sql = "UPDATE avo_battle_room SET br_ch1_dmg_cut_rate = 50.00 WHERE br_id = {$br_id}";
+
+      //2. 내 대미지 추가량 증가(10), 내 대미지 경감률 증가(50%), 회상 카드 사용 여부 true로 변경
+      $sql = "UPDATE avo_battle_room SET br_ch1_dmg_buff = 10, br_ch1_dmg_cut_rate = 50.00, br_ch1_flashback_used = TRUE WHERE br_id = {$br_id}";
       sql_query($sql);
+
     }else{
+
+      //0. VALIDATION
+      if($room['br_ch2_flashback_used']){
+        http_response_code(400);
+        echo '한 번만 사용할 수 있습니다.';
+        exit;
+      }
+
       $brl_ch2_command = $command;
+
+      //1. 커맨드 메시지 작성
       $brl_ch2_text = get_character_info($room['br_ch2_id'], 'flashback_text');
-      $sql = "UPDATE avo_battle_room SET br_ch2_dmg_cut_rate = 50.00 WHERE br_id = {$br_id}";
+
+      //2. 내 대미지 추가량 증가(10), 내 대미지 경감률 증가(50%), 회상 카드 사용 여부 true로 변경
+      $sql = "UPDATE avo_battle_room SET br_ch2_dmg_buff = 10, br_ch2_dmg_cut_rate = 50.00, br_ch2_flashback_used = TRUE WHERE br_id = {$br_id}";
       sql_query($sql);
+
     }
 
   }else if($command=='아이템' && $in_id){
